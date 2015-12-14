@@ -1,4 +1,7 @@
 $("#selectMenu").hide();
+var nodetype;
+var prjCount=2;
+var sitCount=3;
 (function($) {
     $.fn.orgChart = function(options) {
         var opts = $.extend({}, $.fn.orgChart.defaults, options);
@@ -12,7 +15,7 @@ $("#selectMenu").hide();
         onAddNode: null,
         onDeleteNode: null,
         onClickNode: null,
-        newNodeText: 'Add Child'
+        newNodeText: '&nbsp;'
     };
    
 
@@ -54,18 +57,35 @@ $("#selectMenu").hide();
             });
     	   $('#org-list-button').click(function(e){
     		   
-    		   $("#selectMenu").append("<option value='CUS-123-001'>Airtel</option><option value='CUS-123-002'>Reliance</option>");
+    		   $("#selectMenu").append("<option value='CUS-901-001'>Vekomy</option><option value='CUS-103-001'>Reliance</option>");
     		   $("#selectMenu").show();
-
+    		   $("#filter").show();
+    		   $(".drpCss").show();
             });
 //		$(document).live("click","#selectMenu",function(){
     	   $("#selectMenu").click(function(){
 			
-			if($(this).val() == "CUS-123-001"){
+			if($(this).val() == "CUS-901-001"){
 				
 		         var testData = [
-		        {id: 1, name: 'CUS',uid:'CUS-123-002', parent: 0},
-		        {id: 2, name: 'PRJ',uid:'PRJ-123-002', parent: 1},
+		        {id: 1, name: 'CUS',uid:'CUS-901-001', parent: 0},
+		        {id: 2, name: 'PRJ',uid:'PRJ-901-001', parent: 1},
+		        {id: 3, name: 'PRJ',uid:'PRJ-901-002', parent: 1},
+		        {id: 4, name: 'SIT',uid:'SIT-103-001', parent: 1},
+		        {id: 5, name: 'SIT',uid:'SIT-103-002', parent: 1},
+		        {id: 6, name: 'SIT',uid:'SIT-103-003', parent: 1},
+		        {id: 7, name: 'SOL',uid:'SOL-901-001', parent: 4},
+		        {id: 8, name: 'SOL',uid:'SOL-901-002', parent: 4},
+		        {id: 9, name: 'SOL',uid:'SOL-901-003', parent: 5},
+		        {id: 10, name: 'SOL',uid:'SOL-901-004', parent: 6},
+		        {id: 11, name: 'PRD',uid:'PRD-150-001', parent: 7},
+		        {id: 12, name: 'CSA',uid:'CSA-901-001', parent: 7},
+		        {id: 13, name: 'SWC',uid:'SWC-901-001', parent: 12},
+		        {id: 14, name: '3PP',uid:'3PP-320-001', parent: 8},
+		        {id: 15, name: 'PRD',uid:'PRD-150-002', parent: 8},
+		        {id: 16, name: '3PP',uid:'3PP-320-001', parent: 9},
+		        {id: 17, name: 'CSA',uid:'CSA-901-002', parent: 9},
+		        {id: 18, name: '3PP',uid:'3PP-320-001', parent: 10},
 		        
 		    ];
 		    $(function(){
@@ -75,23 +95,40 @@ $("#selectMenu").hide();
 		            allowEdit: true,
 		            onAddNode: function(node){ 
 //		                log('Created new node on node '+node.data.id);
-		                org_chart.newNode(node.data.id); 
+		            	console.log(data);
+		            	loadPopupBox();
+		            	$("input:radio[name=sitprj]").click(function(){
+		            		// alert($(this).val());
+		            			if($(this).val() == "SIT"){
+		            				console.log(rootNodes);
+		            				nodetype = "SIT";
+		            				org_chart.newNode(node.data.id); 
+		            			}else{
+		            				nodetype = "PRJ";
+		            				org_chart.newNode(node.data.id); 
+		            			}
+		            			unloadPopupBox();
+		            		});
+//		                org_chart.newNode(node.data.id);
+		                
 		            },
 		            onDeleteNode: function(node){
 //		                log('Deleted node '+node.data.id);
 		                org_chart.deleteNode(node.data.id); 
 		            },
 		            onClickNode: function(node){
+		            
 //		                log('Clicked node '+node.data.id);
 		            }
 
 		        });
 		    });
-		}else if($(this).val() == "CUS-123-002"){
+		}else if($(this).val() == "CUS-103-001"){
 		         var testData = [
-		          {id: 1, name: 'CUS',uid:'CUS-123-001', parent: 0},
-		        {id: 2, name: 'PRJ',uid:'PRJ-123-001', parent: 1},
+		          {id: 1, name: 'CUS',uid:'CUS-103-001', parent: 0},
+		        {id: 2, name: 'BDP',uid:'BDP-103-001', parent: 1},
 		        {id: 3, name: 'SIT',uid:'SIT-123-001', parent: 1},
+		        {id: 4, name: 'SOL',uid:'SOL-103-001', parent: 3},
 		        
 		        
 		    ];
@@ -103,6 +140,7 @@ $("#selectMenu").hide();
 		            onAddNode: function(node){ 
 //		                log('Created new node on node '+node.data.id);
 		                org_chart.newNode(node.data.id); 
+		               
 		            },
 		            onDeleteNode: function(node){
 //		                log('Deleted node '+node.data.id);
@@ -134,7 +172,7 @@ $("#selectMenu").hide();
             var inputElement = $('<input class="org-input" type="text" value="'+nodes[id].data.name+'"/>');
             $container.find('div[node-id='+id+'] h2').replaceWith(inputElement);
             var commitChange = function(){
-                var h2Element = $('<h2>'+nodes[id].data.name+'</h2><br><h2>'+nodes[id].data.uid+'</h2>');
+                var h2Element = $('<h2>'+nodes[id].data.name+'</h2>');
                 if(opts.allowEdit){
                     h2Element.click(function(){
                         self.startEdit(id);
@@ -161,8 +199,14 @@ $("#selectMenu").hide();
             while(nextId in nodes){
                 nextId++;
             }
-
-            self.addNode({id: nextId, name: '', parent: parentId});
+            if(nodetype=="SIT"){
+            	self.addNode({id: nextId, name: 'SIT', parent: parentId});
+            }else if(nodetype=="PRJ"){
+            	self.addNode({id: nextId, name: 'PRJ', parent: parentId});
+            }else{
+            	self.addNode({id: nextId, name: '', parent: parentId});	
+            }
+            
         }
 
         this.addNode = function(data){
@@ -280,9 +324,22 @@ $("#selectMenu").hide();
             var nameString = '',
                 descString = '';
             if(typeof data.name !== 'undefined'){
-                nameString = '<h2>'+self.data.name+'</h2><h6 class="node-h6">'+self.data.uid+'</h6>';
+            	if(self.data.uid == undefined){
+            		if(self.data.name == "SIT"){
+            				sitCount = sitCount+1;
+            			nameString = '<h2>SIT</h2><h6 class="node-h6">'+"SIT-103-00"+sitCount+'</h6>';
+            		}else if(self.data.name == "PRJ"){
+            			prjCount = prjCount+1;
+            			nameString = '<h2>PRJ</h2><h6 class="node-h6">'+"PRJ-901-00"+prjCount+'</h6>';	
+            		}
+            			
+            	}else{
+            		nameString = '<h2>'+self.data.name+'</h2><h6 class="node-h6">'+self.data.uid+'</h6>';
+            	}
+                
             }
             if(typeof data.description !== 'undefined'){
+            	
                 descString = '<p>'+self.data.description+'</p>';
             }
             
@@ -297,7 +354,8 @@ $("#selectMenu").hide();
                 buttonsHtml = '';
             }
             if(this.data.id == 1){
-            	var buttonsHtml = "<div class='org-add-button'>"+opts.newNodeText+"</div><div id='org-list-button'></div><div class='org-del-button'></div><select id='selectMenu' size='4'></select>";
+            	
+            	var buttonsHtml = "<div class='org-add-button'>"+opts.newNodeText+"</div><div id='org-list-button'></div><div class='org-del-button'></div><div class='org-del-button'></div><div class='drpCss'><span><input type='text' id='filter' /></span><select id='selectMenu' size='4'></select></div>";
             	return "<div class='node' node-id='"+this.data.id+"'>"+nameString+descString+buttonsHtml+"</div>";
             }else{
             	return "<div class='node' node-id='"+this.data.id+"'>"+nameString+descString+buttonsHtml+"</div>";	

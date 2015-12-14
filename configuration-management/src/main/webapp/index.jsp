@@ -36,6 +36,7 @@
     
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
       <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/jquery.jqGrid.min.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/grid.locale-en.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/jquery.orgchart.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/orgChart.js"></script>
 
@@ -85,6 +86,7 @@ overflow:auto;
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
+            <h3 class="panel-header"><i class="fa"></i> Configuration Management Tool</h3>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
@@ -110,22 +112,30 @@ overflow:auto;
                     <div class="col-lg-8">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Name</h3>
+                                <h3 class="panel-title"><i class="fa"></i> Configuration Management Structure</h3>
                             </div>
-                            <div class="panel-body">
-                           <div id="orgChartContainer">
-     					 <div id="orgChart" ></div>
+                            <div class="panel-body divHeight">
+                           <div id="orgChartContainer" class="divHeight">
+     					 <div id="orgChart" class="orgchartDivHeight" ></div>
     						</div>                        
                             </div>
+                            <div id="popup_box">	<!-- OUR PopupBox DIV-->
+<form>
+  <input type="radio" name="sitprj" value="SIT" checked> SIT
+  <br>
+  <input type="radio" name="sitprj" value="PRJ"> PRJ
+</form> 
+	<a id="popupBoxClose">Close</a>	
+</div>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Name</h3>
+                                <h3 class="panel-title"><i class="fa"></i> Documents</h3>
                             </div>
-                            <div class="panel-body">
-                              <div class="documents">
+                            <div class="panel-body documents">
+                              <div class="">
   									<div class="docFields">
   
   									</div>
@@ -140,10 +150,12 @@ overflow:auto;
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Name</h3>
+                                <h3 class="panel-title"><i class="fa"></i> Grid View</h3>
                             </div>
                             <div class="panel-body">
                               <table id="grid"></table>
+                              <div id="pager"></div>
+                                <a href='#' id='test' onClick='javascript:fnExcelReport();'>Export to Excel</a>
                             </div>
                         </div>
                     </div>
@@ -172,12 +184,8 @@ overflow:auto;
     <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/jquery.orgchart.js"></script> --%>
     <script type="text/javascript">
     var testData = [
-        {id: 1, name: 'CUS',uid:'CUS-123-000', parent: 0},
-        {id: 2, name: 'CUS',uid:'CUS-123-000', parent: 1},
-        {id: 3, name: 'CUS',uid:'CUS-123-000', parent: 1},
-        {id: 4, name: 'CUS',uid:'CUS-123-000', parent: 1},
-        {id: 5, name: 'CUS',uid:'CUS-123-000', parent: 1},
-        {id: 6, name: 'CUS',uid:'CUS-123-000', parent: 2},
+        {id: 1, name: 'CUS',uid:'CUS-xxx-000', parent: 0},
+       
         
        
         
@@ -223,8 +231,16 @@ overflow:auto;
 </script>
 <script >
 $(document).ready(function(){
-	jqgridHandler.loadjQGrid();
+	var data = [];
+	jqgridHandler.init(data);	
+	$('#popupBoxClose').click( function() {			
+		unloadPopupBox();
+	});
 	
+	$('#container').click( function() {
+		unloadPopupBox();
+	});
+
 
 });
 </script>
