@@ -18,7 +18,7 @@ var jqgridHandler ={
 		 jqgridata=	$("#grid").jqGrid({
 			    datatype: "local",
 			    
-			    colNames: ['Document No', 'Document Name', 'UTC Type', 'Arctefact Type'],
+			    colNames: ['Document Type Classification', 'Document Type', 'UTC Type', 'Arctefact Type'],
 			    colModel: [{
 			        name: 'Document_No',
 			        index: 'Document_No',

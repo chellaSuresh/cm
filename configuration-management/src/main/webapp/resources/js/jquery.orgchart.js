@@ -169,7 +169,7 @@ var sitCount=3;
         }
 
         this.startEdit = function(id){
-            var inputElement = $('<input class="org-input" type="text" value="'+nodes[id].data.name+'"/>');
+            var inputElement = $('<h2>'+nodes[id].data.name+'</h2>');
             $container.find('div[node-id='+id+'] h2').replaceWith(inputElement);
             var commitChange = function(){
                 var h2Element = $('<h2>'+nodes[id].data.name+'</h2>');
